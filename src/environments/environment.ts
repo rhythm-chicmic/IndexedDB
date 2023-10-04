@@ -1,0 +1,29 @@
+import {EnvironmentParams} from './environment.d';
+import {getRxStorageDexie} from 'rxdb/plugins/storage-dexie';
+import { wrappedValidateAjvStorage } from 'rxdb/plugins/validate-ajv';
+import { addRxPlugin } from 'rxdb';
+import { RxDBLeaderElectionPlugin } from 'rxdb/plugins/leader-election';
+import {
+  RxDBDevModePlugin
+} from 'rxdb/plugins/dev-mode';
+import { SYNC_PORT,DATABASE_NAME } from 'src/app/database.service';
+
+
+
+export const environment:EnvironmentParams = {
+    name : 'web-dev',
+    production: false,
+  isCapacitor: false,
+  isServerSideRendering: false,
+  multiInstance: true,
+  rxdbSyncUrl: 'http://' + window.location.hostname + ':' + SYNC_PORT + '/' + DATABASE_NAME,
+  addRxDBPlugins() {
+    addRxPlugin(RxDBDevModePlugin);
+    addRxPlugin(RxDBLeaderElectionPlugin);
+  },
+  getRxStorage() {
+    return wrappedValidateAjvStorage({
+      storage: getRxStorageDexie()
+    });
+  },
+};
